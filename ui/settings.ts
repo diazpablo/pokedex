@@ -8,3 +8,5 @@ export const LIGHT = '#c7c6c4';
 export const DARK = '#1b1d1c';
 export const MEDIUM = '#ef3e4a';
 export const BUTTON = '#19aad1';
+export const DARK_BLUE = '#0a3167';
+export const LIGHT_BLUE = '#3fd7ff';

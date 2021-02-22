@@ -1,14 +1,19 @@
 import Head from 'next/head';
-import Logo from '../ui/svg/pokemon-logo.svg';
+import Layout from '../components/Layout';
+import { Container } from '../ui/styles/styledGrid';
 
 const Home = () => {
   return (
     <>
       <Head>
-        <title>Fullstack Test</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Pokedex</title>
+        <link rel='icon' href='/favicon.ico' />
       </Head>
-      <Logo className="logo" />
+      <Layout>
+        <Container>
+          App
+        </Container>
+      </Layout>
     </>
   );
 };
