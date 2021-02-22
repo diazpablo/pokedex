@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import Layout from '../components/Layout';
@@ -30,10 +30,15 @@ const GET_POKEMON_EVOLUTIONS = gql`
 
 const Home = () => {
   const [ selectedPokemon, setSelectedPokemon ] = useState(null);
+  const [ selectedEvolution, setSelectedEvolution ] = useState(null);
 
   const { loading, error, data } = useQuery(GET_POKEMONS);
 
   const [ getEvolutions, { loading: loadingEvolution, data: dataEvolutions } ] = useLazyQuery(GET_POKEMON_EVOLUTIONS);
+
+  useEffect(() => {
+    setSelectedEvolution(null);
+  }, [ selectedPokemon ]);
 
   if (loading) return <p>Loading ...</p>;
 
@@ -48,28 +53,58 @@ const Home = () => {
       <Layout>
         <Container>
           <Column>
-            { loading
-              ? 'Loading...'
-              : <PokemonSelector
-                pokemons={ data.pokemons }
-                onSelect={ num => {
-                  setSelectedPokemon(num);
-                  getEvolutions({ variables: { num } });
-                } }
-              />
+            {
+              loading
+                ? <p>Loading...</p>
+                : <PokemonSelector
+                  pokemons={ data.pokemons }
+                  onSelect={ num => {
+                    setSelectedPokemon(num);
+                    getEvolutions({ variables: { num } });
+                  } }
+                />
             }
           </Column>
           <Column size={ 2 }>
-            <div>Pokemon Selected Num:{ selectedPokemon }</div>
+            <Container>
+              <Column>
+                {
+                  // Main PokemonCard
+                  selectedPokemon && <PokemonCard pokemonNum={ selectedPokemon } />
+                }
 
-            { selectedPokemon && <PokemonCard pokemonNum={ selectedPokemon } /> }
-
-            <div>
-              Prev Evolution: { dataEvolutions?.pokemon.prev_evolution?.map(ev => `${ ev.name } `) }
-            </div>
-            <div>
-              Next Evolution: { dataEvolutions?.pokemon.next_evolution?.map(ev => `${ ev.name } `) }
-            </div>
+                {
+                  // Evolutions Buttons
+                  dataEvolutions && !loadingEvolution && <>
+                    { dataEvolutions.pokemon.prev_evolution && <div>
+                      Prev Evolution:
+                      {
+                        dataEvolutions.pokemon.prev_evolution.map(ev => (
+                          <button key={ ev.num } onClick={ () => setSelectedEvolution(ev.num) }>{ ev.name }</button>
+                        ))
+                      }
+                    </div>
+                    }
+                    {
+                      dataEvolutions.pokemon.next_evolution && <div>
+                        Next Evolution:
+                        {
+                          dataEvolutions.pokemon.next_evolution.map(ev => (
+                            <button key={ ev.num } onClick={ () => setSelectedEvolution(ev.num) }>{ ev.name }</button>
+                          ))
+                        }
+                      </div>
+                    }
+                  </>
+                }
+              </Column>
+              <Column>
+                {
+                  // Secondary PokemonCard
+                  selectedEvolution && <PokemonCard pokemonNum={ selectedEvolution } />
+                }
+              </Column>
+            </Container>
           </Column>
         </Container>
       </Layout>

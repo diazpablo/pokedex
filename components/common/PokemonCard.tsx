@@ -4,6 +4,7 @@ import { gql, useQuery } from '@apollo/client';
 const GET_POKEMON = gql`
   query Pokemon($num: String!) {
     pokemon: getPokemon(uid: $num) {
+      id, 
       name
       img
       type
@@ -29,8 +30,8 @@ const PokemonCard = ({ pokemonNum }: PokemonCardProps) => {
     variables: { num: pokemonNum }
   });
 
-  if (loading) return <>`Loading...`</>;
-  if (error) return <>`Error! ${ error.message }`</>;
+  if (loading) return <>Loading...</>;
+  if (error) return <>Error! { error.message }</>;
 
   const { pokemon } = data;
 

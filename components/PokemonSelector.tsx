@@ -9,12 +9,25 @@ const Wrapper = styled.div`
   overflow-y: auto;
 `;
 
+const PokemonButton = styled.button`
+  background: none;
+  outline: none;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+`;
+
 const PokemonSelector = ({ pokemons, onSelect }) => {
   return (
     <Wrapper>
       {
         pokemons && pokemons.map(p => (
-          <a key={ p.num } onClick={ () => onSelect(p.num) }><img src={ p.img } /></a>
+          <PokemonButton
+            key={ p.num }
+            onClick={ () => onSelect(p.num) }
+          >
+            <img src={ p.img } />
+          </PokemonButton>
         ))
       }
     </Wrapper>
