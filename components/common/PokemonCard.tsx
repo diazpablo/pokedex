@@ -1,5 +1,4 @@
 import React from 'react';
-import { gql, useQuery } from '@apollo/client';
 import styled from 'styled-components';
 import { BORDER, DARK, DARK_BLUE, LIGHT_BLUE, MEDIUM, RADIUS } from '../../ui/settings';
 
@@ -10,7 +9,6 @@ const CardWrapper = styled.div`
   background: ${ DARK_BLUE };
   background: linear-gradient(135deg, ${ DARK_BLUE } 0%, ${ LIGHT_BLUE } 100%);
   color: ${ DARK };
-  //margin-right: 3rem;
 `;
 
 const PokeImg = styled.img`
@@ -40,39 +38,8 @@ const PokeType = styled.span`
   text-transform: uppercase;
 `;
 
-const GET_POKEMON = gql`
-  query Pokemon($num: String!) {
-    pokemon: getPokemon(uid: $num) {
-      id, 
-      name
-      img
-      type
-      height
-      weight
-      weaknesses
-      prev_evolution {
-        num
-      }
-      next_evolution {
-        num
-      }
-    }
-  }
-`;
-
-type PokemonCardProps = {
-  pokemonNum: string
-}
-
-const PokemonCard = ({ pokemonNum, ...rest }: PokemonCardProps) => {
-  const { loading, error, data } = useQuery(GET_POKEMON, {
-    variables: { num: pokemonNum }
-  });
-
-  if (loading) return <>Loading...</>;
-  if (error) return <>Error! { error.message }</>;
-
-  const { pokemon } = data;
+const PokemonCard = ({ pokemon, ...rest }) => {
+  if (!pokemon) return null;
 
   return (
     <CardWrapper { ...rest }>

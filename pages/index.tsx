@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Head from 'next/head';
 import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import Layout from '../components/Layout';
 import PokemonSelector from '../components/PokemonSelector';
 import PokemonCard from '../components/common/PokemonCard';
+import { PokemonWrapper } from '../ui/styles/';
 import { Container, Column } from '../ui/styles/styledGrid';
 import EvolutionSelector from '../components/EvolutionSelector';
 
@@ -16,9 +17,17 @@ const GET_POKEMONS = gql`
   }
 `;
 
-const GET_POKEMON_EVOLUTIONS = gql`
- query Pokemon($num: String!) {
+const GET_POKEMON = gql`
+  query Pokemon($num: String!) {
     pokemon: getPokemon(uid: $num) {
+      id, 
+      num,
+      name
+      img
+      type
+      height
+      weight
+      weaknesses
       prev_evolution {
         num, name
       }
@@ -30,20 +39,19 @@ const GET_POKEMON_EVOLUTIONS = gql`
 `;
 
 const Home = () => {
-  const [ selectedPokemon, setSelectedPokemon ] = useState(null);
   const [ selectedEvolution, setSelectedEvolution ] = useState(null);
 
   const { loading, error, data } = useQuery(GET_POKEMONS);
 
-  const [ getEvolutions, { loading: loadingEvolution, data: dataEvolutions } ] = useLazyQuery(GET_POKEMON_EVOLUTIONS);
+  const [ getPokemon, { loading: loadingPokemon, data: dataPokemon, error: errorPokemon } ] = useLazyQuery(GET_POKEMON);
 
-  useEffect(() => {
-    setSelectedEvolution(null);
-  }, [ selectedPokemon ]);
+  const [ getEvolution, {
+    loading: loadingEvolution,
+    data: dataEvolution,
+    error: errorEvolution
+  } ] = useLazyQuery(GET_POKEMON);
 
-  if (loading) return <p>Loading ...</p>;
-
-  if (error) return <>`Error! ${ error.message }`</>;
+  if (error || errorPokemon || errorEvolution) return <>There was an error please try again Later</>;
 
   return (
     <>
@@ -51,43 +59,50 @@ const Home = () => {
         <title>Pokedex</title>
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <Layout>
+      <Layout loading={ loading || loadingPokemon || loadingEvolution }>
         <Container>
           <Column>
 
             <PokemonSelector
-              selected={ selectedPokemon }
-              pokemons={ data.pokemons }
+              selected={ dataPokemon?.pokemon?.num }
+              pokemons={ data?.pokemons }
               onSelect={ num => {
-                setSelectedPokemon(num);
-                getEvolutions({ variables: { num } });
+                setSelectedEvolution(false);
+                getPokemon({ variables: { num } });
               } }
             />
-            
+
           </Column>
           <Column size={ 2 }>
             <Container>
               <Column style={ { marginRight: '3rem' } }>
-                {
-                  // Main PokemonCard
-                  selectedPokemon && <PokemonCard pokemonNum={ selectedPokemon } />
-                }
+                <PokemonWrapper>
+                  {
+                    // Main PokemonCard
+                    dataPokemon && <PokemonCard pokemon={ dataPokemon?.pokemon } />
+                  }
 
-                {
-                  // Evolution Selector
-                  dataEvolutions && !loadingEvolution &&
-                  <EvolutionSelector
-                    previous={ dataEvolutions.pokemon.prev_evolution }
-                    next={ dataEvolutions.pokemon.next_evolution }
-                    onSelect={ setSelectedEvolution }
-                  />
-                }
+                  {
+                    // Evolution Selector
+                    dataPokemon &&
+                    <EvolutionSelector
+                      previous={ dataPokemon.pokemon.prev_evolution }
+                      next={ dataPokemon.pokemon.next_evolution }
+                      onSelect={ num => {
+                        setSelectedEvolution(true);
+                        getEvolution({ variables: { num } });
+                      } }
+                    />
+                  }
+                </PokemonWrapper>
               </Column>
               <Column>
-                {
-                  // Secondary PokemonCard
-                  selectedEvolution && <PokemonCard pokemonNum={ selectedEvolution } />
-                }
+                <PokemonWrapper>
+                  {
+                    // Secondary PokemonCard
+                    dataEvolution && selectedEvolution && <PokemonCard pokemon={ dataEvolution?.pokemon } />
+                  }
+                </PokemonWrapper>
               </Column>
             </Container>
           </Column>
