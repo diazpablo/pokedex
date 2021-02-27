@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BORDER, DARK, DARK_BLUE, LIGHT_BLUE, MEDIUM, RADIUS } from '../../ui/settings';
+import { BORDER, DARK, DARK_BLUE, LIGHT, LIGHT_BLUE, MEDIUM, RADIUS } from '../../ui/settings';
+import PokeballIcon from '../../ui/svg/pokeball.svg';
 
 const CardWrapper = styled.div`
   padding: 2rem;
@@ -14,6 +15,11 @@ const CardWrapper = styled.div`
 const PokeImg = styled.img`
   margin: 0 auto -30px;
   height: 150px;
+`;
+
+const DescriptionWrapper = styled.div`
+  background-color: #fff;
+  padding: 2rem 1rem;
 `;
 
 const PokeName = styled.h2`
@@ -38,20 +44,37 @@ const PokeType = styled.span`
   text-transform: uppercase;
 `;
 
-const PokemonCard = ({ pokemon, ...rest }) => {
-  if (!pokemon) return null;
+const PlaceholderWrapper = styled.div`
+  text-align: center;
+  padding: 2rem;
+`;
+
+const Pokeball = styled(PokeballIcon)`
+  width: 120px;
+  height: 120px;
+  margin-bottom: 30px;
+  path {
+    fill: ${ LIGHT };
+  }
+`;
+
+const PokemonCard = ({ pokemon, placeholder, ...rest }) => {
+  if (!pokemon) return <PlaceholderWrapper>
+    <Pokeball />
+    <p>{ placeholder }</p>
+  </PlaceholderWrapper>;
 
   return (
     <CardWrapper { ...rest }>
       <PokeImg src={ pokemon.img } alt={ pokemon.name } />
 
-      <div style={ { backgroundColor: 'white', padding: '2rem 1rem' } }>
+      <DescriptionWrapper>
         <PokeName>{ pokemon.name }</PokeName>
         <PokeTypes>{ pokemon.type.map(t => <PokeType key={ t }>{ t }</PokeType>) }</PokeTypes>
         <p><strong>Height:</strong> { pokemon.height }</p>
         <p><strong>Weight:</strong> { pokemon.weight }</p>
         <p><strong>Weaknesses:</strong> { pokemon.weaknesses.join(', ') }</p>
-      </div>
+      </DescriptionWrapper>
     </CardWrapper>
   );
 };
