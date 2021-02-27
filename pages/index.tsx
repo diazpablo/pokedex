@@ -75,15 +75,16 @@ const Home = () => {
           </Column>
           <Column size={ 2 }>
             <Container>
-              <Column style={ { marginRight: '3rem' } }>
+              <Column>
                 <PokemonWrapper>
-                  {
-                    // Main PokemonCard
-                    dataPokemon && <PokemonCard pokemon={ dataPokemon?.pokemon } />
-                  }
 
+                  {/* Main PokemonCard*/ }
+                  <PokemonCard
+                    placeholder='Select an Pokemon'
+                    pokemon={ dataPokemon?.pokemon }
+                  />
+                  {/* Evolution Selector*/ }
                   {
-                    // Evolution Selector
                     dataPokemon &&
                     <EvolutionSelector
                       previous={ dataPokemon.pokemon.prev_evolution }
@@ -94,14 +95,18 @@ const Home = () => {
                       } }
                     />
                   }
+
                 </PokemonWrapper>
               </Column>
               <Column>
                 <PokemonWrapper>
-                  {
-                    // Secondary PokemonCard
-                    dataEvolution && selectedEvolution && <PokemonCard pokemon={ dataEvolution?.pokemon } />
-                  }
+
+                  {/*Secondary PokemonCard*/ }
+                  <PokemonCard
+                    placeholder='Select an evolution'
+                    pokemon={ selectedEvolution && dataEvolution?.pokemon }
+                  />
+
                 </PokemonWrapper>
               </Column>
             </Container>
