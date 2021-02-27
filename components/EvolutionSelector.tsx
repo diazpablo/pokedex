@@ -24,7 +24,6 @@ const EvolutionBtn = styled.button.attrs({
   }
 
   &:hover {
-    //background-color: rgba(0, 0, 0, .6);
     color: ${ BUTTON };
   }
 `;
