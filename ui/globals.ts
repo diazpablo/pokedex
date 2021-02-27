@@ -67,6 +67,15 @@ const GlobalStyle = createGlobalStyle`
   select {
     font: inherit;
   }
+  
+  button {
+    background: none;
+    outline: none;
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+    color: inherit;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     * {

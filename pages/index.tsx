@@ -5,6 +5,7 @@ import Layout from '../components/Layout';
 import PokemonSelector from '../components/PokemonSelector';
 import PokemonCard from '../components/common/PokemonCard';
 import { Container, Column } from '../ui/styles/styledGrid';
+import EvolutionSelector from '../components/EvolutionSelector';
 
 const GET_POKEMONS = gql`
   query allPokemons {
@@ -53,49 +54,33 @@ const Home = () => {
       <Layout>
         <Container>
           <Column>
-            {
-              loading
-                ? <p>Loading...</p>
-                : <PokemonSelector
-                  pokemons={ data.pokemons }
-                  onSelect={ num => {
-                    setSelectedPokemon(num);
-                    getEvolutions({ variables: { num } });
-                  } }
-                />
-            }
+
+            <PokemonSelector
+              selected={ selectedPokemon }
+              pokemons={ data.pokemons }
+              onSelect={ num => {
+                setSelectedPokemon(num);
+                getEvolutions({ variables: { num } });
+              } }
+            />
+            
           </Column>
           <Column size={ 2 }>
             <Container>
-              <Column>
+              <Column style={ { marginRight: '3rem' } }>
                 {
                   // Main PokemonCard
                   selectedPokemon && <PokemonCard pokemonNum={ selectedPokemon } />
                 }
 
                 {
-                  // Evolutions Buttons
-                  dataEvolutions && !loadingEvolution && <>
-                    { dataEvolutions.pokemon.prev_evolution && <div>
-                      Prev Evolution:
-                      {
-                        dataEvolutions.pokemon.prev_evolution.map(ev => (
-                          <button key={ ev.num } onClick={ () => setSelectedEvolution(ev.num) }>{ ev.name }</button>
-                        ))
-                      }
-                    </div>
-                    }
-                    {
-                      dataEvolutions.pokemon.next_evolution && <div>
-                        Next Evolution:
-                        {
-                          dataEvolutions.pokemon.next_evolution.map(ev => (
-                            <button key={ ev.num } onClick={ () => setSelectedEvolution(ev.num) }>{ ev.name }</button>
-                          ))
-                        }
-                      </div>
-                    }
-                  </>
+                  // Evolution Selector
+                  dataEvolutions && !loadingEvolution &&
+                  <EvolutionSelector
+                    previous={ dataEvolutions.pokemon.prev_evolution }
+                    next={ dataEvolutions.pokemon.next_evolution }
+                    onSelect={ setSelectedEvolution }
+                  />
                 }
               </Column>
               <Column>

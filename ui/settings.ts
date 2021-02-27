@@ -1,4 +1,4 @@
-export const BORDER = '#999';
+export const BORDER = '#fff';
 export const RADIUS = '3px';
 
 export const FONT_PRIMARY = 'Signika, Helvetica, Arial, sans-serif';

@@ -1,16 +1,16 @@
 import React from 'react';
 import { gql, useQuery } from '@apollo/client';
 import styled from 'styled-components';
-import { DARK, DARK_BLUE, LIGHT_BLUE, MEDIUM, RADIUS } from '../../ui/settings';
+import { BORDER, DARK, DARK_BLUE, LIGHT_BLUE, MEDIUM, RADIUS } from '../../ui/settings';
 
 const CardWrapper = styled.div`
   padding: 2rem;
-  border: 1px solid #fff;
+  border: 1px solid ${ BORDER };
   border-radius: ${ RADIUS };
   background: ${ DARK_BLUE };
   background: linear-gradient(135deg, ${ DARK_BLUE } 0%, ${ LIGHT_BLUE } 100%);
   color: ${ DARK };
-  margin-right: 3rem;
+  //margin-right: 3rem;
 `;
 
 const PokeImg = styled.img`
