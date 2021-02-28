@@ -1,14 +1,24 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { BUTTON, LIGHT, RADIUS } from '../ui/settings';
+import { device } from '../ui/styles/sizes';
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
-  height: 100%;
-  padding: 0 1rem;
+  grid-template-columns: repeat(4, 1fr);
   overflow-y: auto;
+  height: 150px;
+  margin-bottom: 20px;
+  @media ${device.tablet} {
+    grid-template-columns: repeat(8, 1fr);
+  }
+  @media ${device.tabletH} {
+    height: 100%;
+    margin-bottom: 0;
+    gap: 5px;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 1rem;
+  }
 
   ::-webkit-scrollbar {
     width: 10px;

@@ -61,7 +61,7 @@ const Home = () => {
       </Head>
       <Layout loading={ loading || loadingPokemon || loadingEvolution }>
         <Container>
-          <Column>
+          <Column size={ 12 } lg={ 4 }>
 
             <PokemonSelector
               selected={ dataPokemon?.pokemon?.num }
@@ -73,9 +73,9 @@ const Home = () => {
             />
 
           </Column>
-          <Column size={ 2 }>
-            <Container>
-              <Column>
+          <Column size={ 12 } lg={ 8 }>
+            <Container fluid>
+              <Column size={ 12 } md={ 6 }>
                 <PokemonWrapper>
 
                   {/* Main PokemonCard*/ }
@@ -98,7 +98,7 @@ const Home = () => {
 
                 </PokemonWrapper>
               </Column>
-              <Column>
+              <Column size={ 12 } md={ 6 }>
                 <PokemonWrapper>
 
                   {/*Secondary PokemonCard*/ }
